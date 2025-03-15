@@ -25,6 +25,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import NextLink from "next/link";
+import { defaultLogo } from "../constants/logo";
 
 interface LineItem {
   id: string;
@@ -74,8 +75,8 @@ interface InvoiceData {
 }
 
 const defaultInvoiceData: InvoiceData = {
-  title: "invoice",
-  logo: "",
+  title: "Invoice",
+  logo: defaultLogo,
   businessInfo: {
     name: "BUSINESS NAME",
     address: "1234 YOUR ADDRESS",
@@ -92,11 +93,11 @@ const defaultInvoiceData: InvoiceData = {
   lineItems: [
     { id: "1", description: "Your item name here", quantity: 3, price: 50 },
     { id: "2", description: "Your item name here", quantity: 2, price: 50 },
-    { id: "3", description: "Your item name here", quantity: 10, price: 50 },
+    { id: "3", description: "Your item name here", quantity: 5, price: 5 },
   ],
   clientInfo: {
     name: "CLIENT NAME",
-    address: "1234 YOUR ADDRESS",
+    address: "1234 CLIENT'S ADDRESS",
     city: "CITY, 00000",
     phone: "(000)111-2222",
   },
@@ -107,7 +108,7 @@ const defaultInvoiceData: InvoiceData = {
   },
   taxRate: 0,
   discountRate: 0,
-  thankYouMessage: "thank you!",
+  thankYouMessage: "Thank you!",
   socialLinks: [
     { id: "1", type: "facebook", url: "https://facebook.com" },
     { id: "2", type: "instagram", url: "https://instagram.com" },
@@ -441,7 +442,8 @@ export default function InvoiceEditor() {
               asChild
             >
               <span>
-                <Upload className="w-4 h-4" />
+                {" "}
+                <Download className="w-4 h-4" />
                 Import
               </span>
             </Button>
@@ -451,7 +453,7 @@ export default function InvoiceEditor() {
             onClick={exportToJSON}
             className="flex items-center gap-2"
           >
-            <Download className="w-4 h-4" />
+            <Upload className="w-4 h-4" />
             Export
           </Button>
           <Button
@@ -919,10 +921,16 @@ export default function InvoiceEditor() {
       </div>
 
       <footer className="print:hidden mt-10">
-        <p className="text-sm text-gray-500 mt-2">
-          © {new Date().getFullYear()} freebillgenerator.com • All rights
-          reserved.
-        </p>
+        <div className="text-sm text-gray-500 mt-2">
+          Made with ❤️ by{" "}
+          <NextLink
+            href="https://akila.cc"
+            target="_blank"
+            className="text-blue-600"
+          >
+            Akila
+          </NextLink>
+        </div>
       </footer>
     </div>
   );
