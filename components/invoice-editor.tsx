@@ -424,7 +424,7 @@ export default function InvoiceEditor() {
         >
           <Button variant="outline" className="flex items-center gap-2">
             <MessageSquare className="w-4 h-4" />
-            Give Us Your Opinion
+            Give me your feedback
           </Button>{" "}
         </NextLink>
         <div className="flex flex-wrap gap-2">
@@ -742,13 +742,13 @@ export default function InvoiceEditor() {
                 <span>${calculateSubtotal().toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-sm tracking-wide">
-                <span className="text-gray-500 uppercase flex items-center gap-2">
+                <span className="text-gray-500 uppercase flex items-center">
                   Discount(
                   <span
                     contentEditable
                     suppressContentEditableWarning
                     onBlur={(e) => handleContentEdit(e, "discount", "rate")}
-                    className="border-b border-transparent hover:border-gray-200 focus:border-gray-400 focus:outline-none inline-block min-w-[20px] print:border-none"
+                    className="border-b border-transparent hover:border-gray-200 focus:border-gray-400 focus:outline-none inline-block print:border-none"
                   >
                     {invoiceData.discountRate}
                   </span>
@@ -757,13 +757,13 @@ export default function InvoiceEditor() {
                 <span>-${calculateDiscount().toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-sm tracking-wide">
-                <span className="text-gray-500 uppercase flex items-center gap-2">
+                <span className="text-gray-500 uppercase flex items-center">
                   Tax(
                   <span
                     contentEditable
                     suppressContentEditableWarning
                     onBlur={(e) => handleContentEdit(e, "tax", "rate")}
-                    className="border-b border-transparent hover:border-gray-200 focus:border-gray-400 focus:outline-none inline-block min-w-[20px] print:border-none"
+                    className="border-b border-transparent hover:border-gray-200 focus:border-gray-400 focus:outline-none inline-block  print:border-none"
                   >
                     {invoiceData.taxRate}
                   </span>
@@ -913,9 +913,9 @@ export default function InvoiceEditor() {
             </Button>
           </div>
 
-          <p className="text-sm text-gray-500 mt-4">
-            @{invoiceData.businessInfo.website.replace("www.", "")} ·{" "}
-            {invoiceData.businessInfo.website}
+          <p className="text-xs text-gray-500 mt-4">
+            @{new Date().getFullYear()} {invoiceData.businessInfo.name}. All
+            Rights Reserved.
           </p>
         </div>
       </div>
