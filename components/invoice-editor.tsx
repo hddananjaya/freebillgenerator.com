@@ -914,7 +914,7 @@ export default function InvoiceEditor() {
           </div>
 
           <p className="text-xs text-gray-500 mt-4">
-            @{new Date().getFullYear()} {invoiceData.businessInfo.name}. All
+            © {new Date().getFullYear()} {invoiceData.businessInfo.name}. All
             Rights Reserved.
           </p>
         </div>
