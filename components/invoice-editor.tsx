@@ -23,9 +23,12 @@ import {
   Link,
   Printer,
   MessageSquare,
+  GithubIcon,
+  LucideGithub,
 } from "lucide-react";
 import NextLink from "next/link";
 import { defaultLogo } from "../constants/logo";
+import Image from "next/image";
 
 interface LineItem {
   id: string;
@@ -921,14 +924,30 @@ export default function InvoiceEditor() {
       </div>
 
       <footer className="print:hidden mt-10">
-        <div className="text-sm text-gray-500 mt-2">
-          Made with ❤️ by{" "}
+        <div className="text-sm text-gray-500 mt-2 inline-flex items-center gap-2">
+          <span>
+            Made with ❤️ by{" "}
+            <NextLink
+              href="https://akila.cc"
+              target="_blank"
+              className="text-blue-600"
+            >
+              Akila
+            </NextLink>
+          </span>
+
+          {" • "}
           <NextLink
-            href="https://akila.cc"
+            href="https://github.com/akilawelihinda/invoice-generator"
             target="_blank"
-            className="text-blue-600"
+            className="text-blue-600 flex items-center gap-1 inline-flex"
           >
-            Akila
+            <Image
+              src="./github-mark.svg"
+              width={14}
+              height={14}
+              alt="github logo"
+            />
           </NextLink>
         </div>
       </footer>

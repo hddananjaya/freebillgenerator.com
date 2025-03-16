@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Free Bill Generator - Create Unlimited PDF Invoices Online",
+  title: "FreeBillGenerator.com – Your Free Minimal Invoice Maker",
   description:
-    "Need an invoice? Make one in seconds with FreeBillGenerator.com. Totally free, no sign-ups, no limits. Just quick, easy PDF invoices, hassle-free.",
+    "Create simple, professional invoices instantly. Totally free with no hidden fees or watermarks.",
   openGraph: {
     images: [
       {
