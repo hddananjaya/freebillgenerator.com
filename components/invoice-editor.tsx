@@ -938,7 +938,7 @@ export default function InvoiceEditor() {
 
           {" • "}
           <NextLink
-            href="https://github.com/akilawelihinda/invoice-generator"
+            href="https://github.com/hddananjaya/freebillgenerator.com"
             target="_blank"
             className="text-blue-600 flex items-center gap-1 inline-flex"
           >
