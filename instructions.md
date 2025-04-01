@@ -1,0 +1,2 @@
+- Use shadncn/ui components as much as possible
+- When you want to make complex changes, pause and rethink for a simple solution
