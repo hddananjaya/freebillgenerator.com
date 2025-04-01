@@ -6,6 +6,13 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   Facebook,
   Instagram,
   Twitter,
@@ -25,10 +32,12 @@ import {
   MessageSquare,
   GithubIcon,
   LucideGithub,
+  Settings,
 } from "lucide-react";
 import NextLink from "next/link";
 import { defaultLogo } from "../constants/logo";
 import Image from "next/image";
+import { TourGuide } from "@/components/tour-guide";
 
 interface LineItem {
   id: string;
@@ -46,6 +55,7 @@ interface SocialLink {
 interface InvoiceData {
   title: string;
   logo: string;
+  currency: string;
   businessInfo: {
     name: string;
     address: string;
@@ -80,6 +90,7 @@ interface InvoiceData {
 const defaultInvoiceData: InvoiceData = {
   title: "Invoice",
   logo: defaultLogo,
+  currency: "USD",
   businessInfo: {
     name: "BUSINESS NAME",
     address: "1234 YOUR ADDRESS",
@@ -122,6 +133,27 @@ const defaultInvoiceData: InvoiceData = {
 
 const STORAGE_KEY = "invoice-editor-data";
 
+const formatCurrency = (amount: number, currency: string) => {
+  try {
+    const formatter = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: currency || "USD", // Fallback to USD if currency is empty
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    return formatter.format(amount);
+  } catch (error) {
+    // Fallback to USD if the currency code is invalid
+    const formatter = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    return formatter.format(amount);
+  }
+};
+
 export default function InvoiceEditor() {
   const [invoiceData, setInvoiceData] = useState<InvoiceData>(() => {
     if (typeof window !== "undefined") {
@@ -139,6 +171,7 @@ export default function InvoiceEditor() {
   const [activeSocialLinkId, setActiveSocialLinkId] = useState<string | null>(
     null
   );
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const invoiceRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [hydrated, setHydrated] = useState(false);
@@ -194,7 +227,15 @@ export default function InvoiceEditor() {
     id: string,
     field: keyof LineItem
   ) => {
-    const value = e.target.innerText.replace("$", "");
+    let value = e.target.innerText;
+
+    if (field === "price") {
+      // Remove currency symbol and any non-numeric characters except decimal point
+      value = value.replace(/[^0-9.]/g, "");
+    } else if (field === "quantity") {
+      // Remove any non-numeric characters
+      value = value.replace(/[^0-9]/g, "");
+    }
 
     setInvoiceData((prev) => {
       const newLineItems = prev.lineItems.map((item) => {
@@ -414,6 +455,14 @@ export default function InvoiceEditor() {
     }
   };
 
+  const handleCurrencyChange = (currency: string) => {
+    setInvoiceData((prev) => ({
+      ...prev,
+      currency,
+    }));
+    setIsSettingsOpen(false);
+  };
+
   if (!hydrated) {
     return null;
   }
@@ -467,6 +516,41 @@ export default function InvoiceEditor() {
             <X className="w-4 h-4" />
             Reset
           </Button>
+          <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+            <TourGuide>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Settings className="w-4 h-4" />
+                  Settings
+                </Button>
+              </DialogTrigger>
+            </TourGuide>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Invoice Settings</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Currency</label>
+                  <select
+                    value={invoiceData.currency}
+                    onChange={(e) => handleCurrencyChange(e.target.value)}
+                    className="w-full p-2 border rounded-md"
+                  >
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="JPY">JPY (¥)</option>
+                    <option value="AUD">AUD (A$)</option>
+                    <option value="CAD">CAD (C$)</option>
+                    <option value="CHF">CHF (Fr)</option>
+                    <option value="CNY">CNY (¥)</option>
+                    <option value="INR">INR (₹)</option>
+                  </select>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
           <Button onClick={triggerPrint} className="flex items-center gap-2">
             <Printer className="w-4 h-4" />
             Print / Save PDF
@@ -665,12 +749,15 @@ export default function InvoiceEditor() {
                       onBlur={(e) => handleLineItemEdit(e, item.id, "price")}
                       className="text-sm tracking-wide border-b border-transparent hover:border-gray-200 focus:border-gray-400 focus:outline-none inline-block min-w-[50px] print:border-none"
                     >
-                      ${item.price.toFixed(2)}
+                      {formatCurrency(item.price, invoiceData.currency)}
                     </span>
                   </td>
                   <td className="py-4 text-right">
                     <span className="text-sm tracking-wide">
-                      ${(item.quantity * item.price).toFixed(2)}
+                      {formatCurrency(
+                        item.quantity * item.price,
+                        invoiceData.currency
+                      )}
                     </span>
                   </td>
                   <td className="py-4 print:hidden">
@@ -742,7 +829,9 @@ export default function InvoiceEditor() {
             <div className="text-right space-y-3 border-b border-gray-800 pb-4">
               <div className="flex justify-between text-sm tracking-wide">
                 <span className="text-gray-500 uppercase">Total Amount</span>
-                <span>${calculateSubtotal().toFixed(2)}</span>
+                <span>
+                  {formatCurrency(calculateSubtotal(), invoiceData.currency)}
+                </span>
               </div>
               <div className="flex justify-between text-sm tracking-wide">
                 <span className="text-gray-500 uppercase flex items-center">
@@ -757,7 +846,9 @@ export default function InvoiceEditor() {
                   </span>
                   %)
                 </span>
-                <span>-${calculateDiscount().toFixed(2)}</span>
+                <span>
+                  -{formatCurrency(calculateDiscount(), invoiceData.currency)}
+                </span>
               </div>
               <div className="flex justify-between text-sm tracking-wide">
                 <span className="text-gray-500 uppercase flex items-center">
@@ -766,19 +857,21 @@ export default function InvoiceEditor() {
                     contentEditable
                     suppressContentEditableWarning
                     onBlur={(e) => handleContentEdit(e, "tax", "rate")}
-                    className="border-b border-transparent hover:border-gray-200 focus:border-gray-400 focus:outline-none inline-block  print:border-none"
+                    className="border-b border-transparent hover:border-gray-200 focus:border-gray-400 focus:outline-none inline-block print:border-none"
                   >
                     {invoiceData.taxRate}
                   </span>
                   %)
                 </span>
-                <span>${calculateTax().toFixed(2)}</span>
+                <span>
+                  {formatCurrency(calculateTax(), invoiceData.currency)}
+                </span>
               </div>
             </div>
             <div className="flex justify-between text-sm tracking-wide mt-4">
               <span className="text-gray-500 uppercase">Amount Due</span>
               <span className="font-medium">
-                ${calculateTotal().toFixed(2)}
+                {formatCurrency(calculateTotal(), invoiceData.currency)}
               </span>
             </div>
           </div>

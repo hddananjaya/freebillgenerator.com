@@ -2,6 +2,12 @@
 import InvoiceEditor from "../components/invoice-editor";
 import { initializeApp } from "firebase/app";
 import { getAnalytics, isSupported } from "firebase/analytics";
+import Tracker from "@openreplay/tracker";
+
+const tracker = new Tracker({
+  projectKey: "6gJ2SR6RHbh6HTp9fZMY",
+  __DISABLE_SECURE_MODE: true,
+});
 
 const firebaseConfig = {
   apiKey: "AIzaSyCMS3Oq79l7dFXG_cqdWdl8YLsf8jh2SHw",
@@ -15,6 +21,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 isSupported().then((isSupported) => (isSupported ? getAnalytics(app) : null));
+tracker.start();
 
 export default function Page() {
   return <InvoiceEditor />;
