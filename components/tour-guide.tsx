@@ -46,7 +46,7 @@ export function TourGuide({ children }: TourGuideProps) {
           <div className="space-y-2">
             <p className="font-medium">New Feature!</p>
             <p className="text-sm text-muted-foreground">
-              We now support multiple currencies! Click here to change your
+              We now support multiple currencies! Click settings to change your
               preferred currency.
             </p>
             <Button
