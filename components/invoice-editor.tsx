@@ -37,6 +37,7 @@ import {
 import NextLink from "next/link";
 import { defaultLogo } from "../constants/logo";
 import Image from "next/image";
+import { TourGuide } from "@/components/tour-guide";
 
 interface LineItem {
   id: string;
@@ -516,12 +517,14 @@ export default function InvoiceEditor() {
             Reset
           </Button>
           <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
-            <DialogTrigger asChild>
-              <Button variant="outline" className="flex items-center gap-2">
-                <Settings className="w-4 h-4" />
-                Settings
-              </Button>
-            </DialogTrigger>
+            <TourGuide>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Settings className="w-4 h-4" />
+                  Settings
+                </Button>
+              </DialogTrigger>
+            </TourGuide>
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Invoice Settings</DialogTitle>
